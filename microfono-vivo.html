@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#17191b">
+<title>Micrófono en vivo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#17191b;
+  --panel:#202427;
+  --line:#343b40;
+  --dim:#7c878e;
+  --text:#e9ebeb;
+  --signal:#4dd0c0;
+  --hot:#f5c542;
+  --clip:#ff5c46;
+  --radius:6px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  font-variant-numeric:tabular-nums;
+  display:flex;
+  justify-content:center;
+  overscroll-behavior:none;
+}
+.app{
+  width:100%;
+  max-width:460px;
+  min-height:100dvh;
+  padding:18px 18px calc(18px + env(safe-area-inset-bottom));
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+
+/* estado */
+.status{
+  display:flex;align-items:center;gap:9px;
+  font-size:.82rem;color:var(--dim);letter-spacing:.01em;
+}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--line);flex:none;transition:background .18s}
+body.live .dot{background:var(--signal);box-shadow:0 0 10px var(--signal)}
+body.muted .dot{background:var(--hot)}
+
+/* medidor: el elemento principal */
+.meter-block{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:16px 14px 13px;
+}
+.ladder{
+  display:flex;gap:3px;height:86px;position:relative;
+}
+.seg{
+  flex:1;border-radius:1.5px;background:#2b3134;
+  transition:background .04s linear;
+}
+.peak{
+  position:absolute;top:0;bottom:0;width:3px;
+  background:var(--text);border-radius:2px;
+  opacity:0;transition:opacity .2s;
+  pointer-events:none;
+}
+.scale{
+  display:flex;justify-content:space-between;
+  margin-top:9px;font-size:.66rem;color:#5d676c;
+}
+.readout{
+  display:flex;justify-content:space-between;align-items:baseline;
+  margin-top:12px;padding-top:12px;border-top:1px solid var(--line);
+}
+.rms{font-size:2.05rem;font-weight:600;line-height:1;letter-spacing:-.02em}
+.rms span{font-size:.9rem;font-weight:400;color:var(--dim);margin-left:3px;letter-spacing:0}
+.peakval{font-size:.82rem;color:var(--dim)}
+.peakval b{color:var(--text);font-weight:500}
+body.clipping .rms{color:var(--clip)}
+
+/* ganancia */
+.control label{
+  display:flex;justify-content:space-between;align-items:baseline;
+  font-size:.82rem;color:var(--dim);margin-bottom:11px;
+}
+.control label b{font-size:1.02rem;color:var(--text);font-weight:600}
+input[type=range]{
+  -webkit-appearance:none;appearance:none;
+  width:100%;height:34px;background:transparent;cursor:pointer;
+}
+input[type=range]::-webkit-slider-runnable-track{
+  height:5px;border-radius:3px;
+  background:linear-gradient(90deg,#2b3134,#414a4f);
+}
+input[type=range]::-moz-range-track{
+  height:5px;border-radius:3px;background:#333b3f;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:30px;height:30px;border-radius:50%;
+  background:var(--text);margin-top:-12.5px;
+  border:5px solid var(--bg);box-shadow:0 0 0 1px var(--line);
+}
+input[type=range]::-moz-range-thumb{
+  width:20px;height:20px;border-radius:50%;background:var(--text);
+  border:5px solid var(--bg);box-shadow:0 0 0 1px var(--line);
+}
+input[type=range]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 2px var(--signal)}
+
+/* interruptores */
+.toggles{display:flex;gap:9px}
+.tg{
+  flex:1;background:transparent;color:var(--dim);
+  border:1px solid var(--line);border-radius:var(--radius);
+  padding:12px 8px;font:inherit;font-size:.82rem;
+  text-align:left;line-height:1.35;cursor:pointer;
+  transition:border-color .15s,color .15s,background .15s;
+}
+.tg b{display:block;font-weight:500;font-size:.9rem;color:var(--text);margin-bottom:2px}
+.tg[aria-pressed=true]{border-color:var(--signal);background:rgba(77,208,192,.08);color:var(--signal)}
+.tg[aria-pressed=true] b{color:var(--signal)}
+
+.spacer{flex:1;min-height:6px}
+
+/* acción principal */
+.primary{
+  width:100%;border:none;border-radius:var(--radius);
+  padding:22px;font:inherit;font-size:1.12rem;font-weight:600;
+  background:var(--signal);color:#0e1416;cursor:pointer;
+  transition:background .15s,color .15s;
+}
+.primary:active{opacity:.85}
+body.live .primary{background:var(--hot);color:#241d05}
+body.muted .primary{background:var(--signal);color:#0e1416}
+.primary:focus-visible{outline:2px solid var(--text);outline-offset:3px}
+
+.footer{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:.75rem;color:#5d676c;
+}
+.link{
+  background:none;border:none;color:#5d676c;font:inherit;font-size:.75rem;
+  text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:4px 0;
+}
+.link[hidden]{display:none}
+
+.note{
+  font-size:.75rem;color:#5d676c;line-height:1.5;
+  border-left:2px solid var(--line);padding-left:10px;
+}
+.note.warn{border-color:var(--clip);color:#c58a80}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <p class="status"><span class="dot"></span><span id="statusText">Micrófono detenido</span></p>
+
+  <div class="meter-block">
+    <div class="ladder" id="ladder"><div class="peak" id="peakMark"></div></div>
+    <div class="scale"><span>−60</span><span>−30</span><span>−18</span><span>−6</span><span>0 dB</span></div>
+    <div class="readout">
+      <div class="rms" id="rms">−∞<span>dBFS</span></div>
+      <div class="peakval">pico <b id="peak">−∞</b></div>
+    </div>
+  </div>
+
+  <div class="control">
+    <label for="gain">Ganancia del micrófono <b id="gainVal">0.0 dB</b></label>
+    <input type="range" id="gain" min="-12" max="30" step="0.5" value="0">
+  </div>
+
+  <div class="toggles">
+    <button class="tg" id="limiter" aria-pressed="true"><b>Limitador</b>Frena el acople y la saturación</button>
+    <button class="tg" id="hpf" aria-pressed="true"><b>Filtro grave</b>Corta retumbo y ruido de manejo</button>
+  </div>
+
+  <p class="note warn" id="feedbackNote" hidden>Nivel muy alto y sostenido. Aléjate de la bocina o baja la ganancia.</p>
+
+  <div class="spacer"></div>
+
+  <button class="primary" id="main">Activar micrófono</button>
+
+  <div class="footer">
+    <span id="latency">Latencia del teléfono: —</span>
+    <button class="link" id="stop" hidden>Liberar micrófono</button>
+  </div>
+
+  <p class="note" id="err" hidden></p>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var SEGMENTS = 34, MIN_DB = -60;
+  var ladder = document.getElementById('ladder');
+  var segs = [];
+  for (var i = 0; i < SEGMENTS; i++){
+    var d = document.createElement('div');
+    d.className = 'seg';
+    ladder.appendChild(d);
+    segs.push(d);
+  }
+
+  var ui = {
+    main: document.getElementById('main'),
+    stop: document.getElementById('stop'),
+    gain: document.getElementById('gain'),
+    gainVal: document.getElementById('gainVal'),
+    limiter: document.getElementById('limiter'),
+    hpf: document.getElementById('hpf'),
+    rms: document.getElementById('rms'),
+    peak: document.getElementById('peak'),
+    peakMark: document.getElementById('peakMark'),
+    status: document.getElementById('statusText'),
+    latency: document.getElementById('latency'),
+    err: document.getElementById('err'),
+    fb: document.getElementById('feedbackNote')
+  };
+
+  var ctx = null, stream = null, src = null;
+  var hpNode = null, gainNode = null, compNode = null, analyser = null, outNode = null;
+  var buf = null, raf = 0, wakeLock = null;
+  var running = false, muted = false;
+  var peakHold = 0, peakHoldAt = 0, clipUntil = 0, hotSince = 0;
+
+  function dbToLin(db){ return Math.pow(10, db / 20); }
+  function linToDb(v){ return v > 0 ? 20 * Math.log10(v) : -Infinity; }
+  function fmt(db){ return db === -Infinity || db < MIN_DB ? '−∞' : (db < 0 ? '−' : '+') + Math.abs(db).toFixed(1); }
+
+  function showError(msg){
+    ui.err.textContent = msg;
+    ui.err.hidden = false;
+    ui.err.classList.add('warn');
+  }
+  function clearError(){ ui.err.hidden = true; }
+
+  async function build(){
+    stream = await navigator.mediaDevices.getUserMedia({
+      audio: {
+        echoCancellation: false,
+        noiseSuppression: false,
+        autoGainControl: false,
+        channelCount: 1
+      },
+      video: false
+    });
+
+    ctx = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: 'interactive' });
+    if (ctx.state === 'suspended') await ctx.resume();
+
+    src = ctx.createMediaStreamSource(stream);
+
+    hpNode = ctx.createBiquadFilter();
+    hpNode.type = 'highpass';
+    hpNode.frequency.value = 110;
+    hpNode.Q.value = 0.707;
+
+    gainNode = ctx.createGain();
+    gainNode.gain.value = dbToLin(parseFloat(ui.gain.value));
+
+    compNode = ctx.createDynamicsCompressor();
+    compNode.threshold.value = -6;
+    compNode.knee.value = 0;
+    compNode.ratio.value = 20;
+    compNode.attack.value = 0.003;
+    compNode.release.value = 0.12;
+
+    analyser = ctx.createAnalyser();
+    analyser.fftSize = 2048;
+    analyser.smoothingTimeConstant = 0;
+    buf = new Float32Array(analyser.fftSize);
+
+    outNode = ctx.createGain();
+    outNode.gain.value = 1;
+
+    wire();
+    outNode.connect(ctx.destination);
+
+    var ms = (ctx.baseLatency || 0) + (ctx.outputLatency || 0);
+    ui.latency.textContent = ms > 0
+      ? 'Latencia del teléfono: ' + Math.round(ms * 1000) + ' ms'
+      : 'Latencia del teléfono: no reportada';
+  }
+
+  // reconecta la cadena según los interruptores activos
+  function wire(){
+    [src, hpNode, gainNode, compNode, analyser].forEach(function(n){
+      if (n) try { n.disconnect(); } catch(e){}
+    });
+    var chain = [src];
+    if (ui.hpf.getAttribute('aria-pressed') === 'true') chain.push(hpNode);
+    chain.push(gainNode);
+    if (ui.limiter.getAttribute('aria-pressed') === 'true') chain.push(compNode);
+    chain.push(analyser);
+    for (var i = 0; i < chain.length - 1; i++) chain[i].connect(chain[i + 1]);
+    analyser.connect(outNode);
+  }
+
+  function loop(){
+    raf = requestAnimationFrame(loop);
+    if (!analyser) return;
+    analyser.getFloatTimeDomainData(buf);
+
+    var sum = 0, pk = 0;
+    for (var i = 0; i < buf.length; i++){
+      var s = buf[i];
+      sum += s * s;
+      var a = s < 0 ? -s : s;
+      if (a > pk) pk = a;
+    }
+    var rms = Math.sqrt(sum / buf.length);
+    var rmsDb = linToDb(rms);
+    var pkDb = linToDb(pk);
+    var now = performance.now();
+
+    if (pk >= peakHold){ peakHold = pk; peakHoldAt = now; }
+    else if (now - peakHoldAt > 1200){ peakHold *= 0.93; }
+
+    if (pk >= 0.995) clipUntil = now + 800;
+    document.body.classList.toggle('clipping', now < clipUntil);
+
+    // aviso de acople: nivel alto sostenido por más de 2 s
+    if (!muted && rmsDb > -8){ if (!hotSince) hotSince = now; }
+    else hotSince = 0;
+    ui.fb.hidden = !(hotSince && now - hotSince > 2000);
+
+    var lit = Math.round(((Math.max(rmsDb, MIN_DB) - MIN_DB) / -MIN_DB) * SEGMENTS);
+    for (var j = 0; j < SEGMENTS; j++){
+      var frac = j / (SEGMENTS - 1);
+      var color = frac > 0.88 ? 'var(--clip)' : frac > 0.72 ? 'var(--hot)' : 'var(--signal)';
+      segs[j].style.background = j < lit ? color : '#2b3134';
+    }
+
+    var phDb = linToDb(peakHold);
+    if (phDb > MIN_DB){
+      ui.peakMark.style.opacity = '1';
+      ui.peakMark.style.left = (((phDb - MIN_DB) / -MIN_DB) * 100) + '%';
+    } else {
+      ui.peakMark.style.opacity = '0';
+    }
+
+    ui.rms.innerHTML = fmt(rmsDb) + '<span>dBFS</span>';
+    ui.peak.textContent = fmt(pkDb);
+  }
+
+  async function keepAwake(){
+    try {
+      if ('wakeLock' in navigator && !wakeLock) wakeLock = await navigator.wakeLock.request('screen');
+    } catch(e){}
+  }
+  document.addEventListener('visibilitychange', function(){
+    if (document.visibilityState === 'visible' && running) keepAwake();
+    else wakeLock = null;
+  });
+
+  function setState(){
+    document.body.classList.toggle('live', running && !muted);
+    document.body.classList.toggle('muted', running && muted);
+    ui.stop.hidden = !running;
+    if (!running){
+      ui.main.textContent = 'Activar micrófono';
+      ui.status.textContent = 'Micrófono detenido';
+    } else if (muted){
+      ui.main.textContent = 'Reanudar';
+      ui.status.textContent = 'Silenciado';
+    } else {
+      ui.main.textContent = 'Silenciar';
+      ui.status.textContent = 'Transmitiendo a la salida de audio';
+    }
+  }
+
+  ui.main.addEventListener('click', async function(){
+    clearError();
+    if (!running){
+      try {
+        await build();
+        running = true; muted = false;
+        outNode.gain.setTargetAtTime(1, ctx.currentTime, 0.01);
+        keepAwake();
+        cancelAnimationFrame(raf);
+        loop();
+      } catch(e){
+        showError(e && e.name === 'NotAllowedError'
+          ? 'Permiso de micrófono denegado. Habilítalo para este sitio y vuelve a intentar.'
+          : 'No se pudo abrir el micrófono: ' + (e && e.message ? e.message : e));
+        return;
+      }
+    } else {
+      muted = !muted;
+      outNode.gain.setTargetAtTime(muted ? 0 : 1, ctx.currentTime, 0.015);
+    }
+    setState();
+  });
+
+  ui.stop.addEventListener('click', function(){
+    cancelAnimationFrame(raf);
+    if (stream) stream.getTracks().forEach(function(t){ t.stop(); });
+    if (ctx) ctx.close();
+    ctx = stream = src = analyser = null;
+    running = false; muted = false; peakHold = 0; hotSince = 0;
+    wakeLock = null;
+    ui.rms.innerHTML = '−∞<span>dBFS</span>';
+    ui.peak.textContent = '−∞';
+    ui.peakMark.style.opacity = '0';
+    ui.fb.hidden = true;
+    segs.forEach(function(s){ s.style.background = '#2b3134'; });
+    document.body.classList.remove('clipping');
+    setState();
+  });
+
+  ui.gain.addEventListener('input', function(){
+    var db = parseFloat(ui.gain.value);
+    ui.gainVal.textContent = (db > 0 ? '+' : db < 0 ? '−' : '') + Math.abs(db).toFixed(1) + ' dB';
+    if (gainNode) gainNode.gain.setTargetAtTime(dbToLin(db), ctx.currentTime, 0.02);
+  });
+
+  [ui.limiter, ui.hpf].forEach(function(btn){
+    btn.addEventListener('click', function(){
+      btn.setAttribute('aria-pressed', btn.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
+      if (running) wire();
+    });
+  });
+
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    showError('Este navegador no expone el micrófono. Ábrelo en Chrome sobre https:// o localhost.');
+    ui.main.disabled = true;
+  }
+
+  setState();
+})();
+</script>
+</body>
+</html>
