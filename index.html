@@ -14,6 +14,7 @@
   --panel:#202427;
   --line:#343b40;
   --dim:#7c878e;
+  --faint:#5d676c;
   --text:#e9ebeb;
   --signal:#4dd0c0;
   --hot:#f5c542;
@@ -23,136 +24,89 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
 body{
-  background:var(--bg);
-  color:var(--text);
+  background:var(--bg);color:var(--text);
   font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
   font-variant-numeric:tabular-nums;
-  display:flex;
-  justify-content:center;
-  overscroll-behavior:none;
+  display:flex;justify-content:center;overscroll-behavior:none;
 }
 .app{
-  width:100%;
-  max-width:460px;
-  min-height:100dvh;
-  padding:18px 18px calc(18px + env(safe-area-inset-bottom));
-  display:flex;
-  flex-direction:column;
-  gap:16px;
+  width:100%;max-width:460px;min-height:100dvh;
+  padding:16px 16px 0;display:flex;flex-direction:column;gap:14px;
 }
 
-/* estado */
-.status{
-  display:flex;align-items:center;gap:9px;
-  font-size:.82rem;color:var(--dim);letter-spacing:.01em;
-}
+.status{display:flex;align-items:center;gap:9px;font-size:.82rem;color:var(--dim)}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--line);flex:none;transition:background .18s}
 body.live .dot{background:var(--signal);box-shadow:0 0 10px var(--signal)}
 body.muted .dot{background:var(--hot)}
 
-/* medidor: el elemento principal */
-.meter-block{
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  padding:16px 14px 13px;
-}
-.ladder{
-  display:flex;gap:3px;height:86px;position:relative;
-}
-.seg{
-  flex:1;border-radius:1.5px;background:#2b3134;
-  transition:background .04s linear;
-}
-.peak{
-  position:absolute;top:0;bottom:0;width:3px;
-  background:var(--text);border-radius:2px;
-  opacity:0;transition:opacity .2s;
-  pointer-events:none;
-}
-.scale{
-  display:flex;justify-content:space-between;
-  margin-top:9px;font-size:.66rem;color:#5d676c;
-}
-.readout{
-  display:flex;justify-content:space-between;align-items:baseline;
-  margin-top:12px;padding-top:12px;border-top:1px solid var(--line);
-}
-.rms{font-size:2.05rem;font-weight:600;line-height:1;letter-spacing:-.02em}
-.rms span{font-size:.9rem;font-weight:400;color:var(--dim);margin-left:3px;letter-spacing:0}
-.peakval{font-size:.82rem;color:var(--dim)}
-.peakval b{color:var(--text);font-weight:500}
+.meter-block{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px 13px 11px}
+.ladder{display:flex;gap:3px;height:58px;position:relative}
+.seg{flex:1;border-radius:1.5px;background:#2b3134;transition:background .04s linear}
+.peak{position:absolute;top:0;bottom:0;width:3px;background:var(--text);border-radius:2px;opacity:0;transition:opacity .2s;pointer-events:none}
+.gateline{position:absolute;top:-3px;bottom:-3px;width:1px;background:var(--hot);opacity:.55;pointer-events:none}
+.scale{display:flex;justify-content:space-between;margin-top:8px;font-size:.66rem;color:var(--faint)}
+.readout{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+.rms{font-size:1.7rem;font-weight:600;line-height:1;letter-spacing:-.02em}
+.rms span{font-size:.82rem;font-weight:400;color:var(--dim);margin-left:3px;letter-spacing:0}
+.right{display:flex;align-items:center;gap:12px;font-size:.78rem;color:var(--dim)}
+.right b{color:var(--text);font-weight:500}
+.gatepill{padding:3px 8px;border-radius:20px;border:1px solid var(--line);color:var(--faint);font-size:.72rem;transition:all .1s}
+.gatepill.open{border-color:var(--signal);color:var(--signal)}
 body.clipping .rms{color:var(--clip)}
 
-/* ganancia */
-.control label{
-  display:flex;justify-content:space-between;align-items:baseline;
-  font-size:.82rem;color:var(--dim);margin-bottom:11px;
-}
-.control label b{font-size:1.02rem;color:var(--text);font-weight:600}
-input[type=range]{
-  -webkit-appearance:none;appearance:none;
-  width:100%;height:34px;background:transparent;cursor:pointer;
-}
-input[type=range]::-webkit-slider-runnable-track{
-  height:5px;border-radius:3px;
-  background:linear-gradient(90deg,#2b3134,#414a4f);
-}
-input[type=range]::-moz-range-track{
-  height:5px;border-radius:3px;background:#333b3f;
-}
-input[type=range]::-webkit-slider-thumb{
-  -webkit-appearance:none;width:30px;height:30px;border-radius:50%;
-  background:var(--text);margin-top:-12.5px;
-  border:5px solid var(--bg);box-shadow:0 0 0 1px var(--line);
-}
-input[type=range]::-moz-range-thumb{
-  width:20px;height:20px;border-radius:50%;background:var(--text);
-  border:5px solid var(--bg);box-shadow:0 0 0 1px var(--line);
-}
+.control label{display:flex;justify-content:space-between;align-items:baseline;font-size:.82rem;color:var(--dim);margin-bottom:8px}
+.control label b{font-size:1rem;color:var(--text);font-weight:600}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:32px;background:transparent;cursor:pointer;display:block}
+input[type=range]::-webkit-slider-runnable-track{height:5px;border-radius:3px;background:linear-gradient(90deg,#2b3134,#414a4f)}
+input[type=range]::-moz-range-track{height:5px;border-radius:3px;background:#333b3f}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;border-radius:50%;background:var(--text);margin-top:-12.5px;border:5px solid var(--bg);box-shadow:0 0 0 1px var(--line)}
+input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--text);border:5px solid var(--bg);box-shadow:0 0 0 1px var(--line)}
 input[type=range]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 2px var(--signal)}
 
-/* interruptores */
-.toggles{display:flex;gap:9px}
+.row{display:flex;gap:8px}
 .tg{
-  flex:1;background:transparent;color:var(--dim);
-  border:1px solid var(--line);border-radius:var(--radius);
-  padding:12px 8px;font:inherit;font-size:.82rem;
-  text-align:left;line-height:1.35;cursor:pointer;
-  transition:border-color .15s,color .15s,background .15s;
+  flex:1;background:transparent;color:var(--dim);border:1px solid var(--line);
+  border-radius:var(--radius);padding:10px 9px;font:inherit;font-size:.76rem;
+  text-align:left;line-height:1.3;cursor:pointer;transition:border-color .15s,color .15s,background .15s;
 }
-.tg b{display:block;font-weight:500;font-size:.9rem;color:var(--text);margin-bottom:2px}
+.tg b{display:block;font-weight:500;font-size:.85rem;color:var(--text);margin-bottom:2px}
 .tg[aria-pressed=true]{border-color:var(--signal);background:rgba(77,208,192,.08);color:var(--signal)}
 .tg[aria-pressed=true] b{color:var(--signal)}
+.tg:disabled{opacity:.4;cursor:default}
 
-.spacer{flex:1;min-height:6px}
+.act{
+  background:transparent;color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
+  padding:11px 14px;font:inherit;font-size:.85rem;cursor:pointer;white-space:nowrap;
+}
+.act:disabled{opacity:.4;cursor:default}
+.act:active{background:#262b2e}
 
-/* acción principal */
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:13px}
+.panel h2{font-size:.85rem;font-weight:600;margin-bottom:3px}
+.panel p{font-size:.75rem;color:var(--faint);line-height:1.45;margin-bottom:11px}
+.measure{display:flex;align-items:center;gap:11px}
+.measure .res{font-size:1.25rem;font-weight:600;line-height:1.1}
+.measure .res small{display:block;font-size:.68rem;font-weight:400;color:var(--faint);letter-spacing:0}
+
+.foot{
+  position:sticky;bottom:0;background:var(--bg);
+  padding:10px 0 calc(14px + env(safe-area-inset-bottom));
+  margin-top:auto;display:flex;flex-direction:column;gap:9px;
+}
 .primary{
-  width:100%;border:none;border-radius:var(--radius);
-  padding:22px;font:inherit;font-size:1.12rem;font-weight:600;
-  background:var(--signal);color:#0e1416;cursor:pointer;
-  transition:background .15s,color .15s;
+  width:100%;border:none;border-radius:var(--radius);padding:20px;
+  font:inherit;font-size:1.1rem;font-weight:600;
+  background:var(--signal);color:#0e1416;cursor:pointer;transition:background .15s,color .15s;
 }
 .primary:active{opacity:.85}
 body.live .primary{background:var(--hot);color:#241d05}
 body.muted .primary{background:var(--signal);color:#0e1416}
 .primary:focus-visible{outline:2px solid var(--text);outline-offset:3px}
-
-.footer{
-  display:flex;justify-content:space-between;align-items:center;
-  font-size:.75rem;color:#5d676c;
-}
-.link{
-  background:none;border:none;color:#5d676c;font:inherit;font-size:.75rem;
-  text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:4px 0;
-}
+.footline{display:flex;justify-content:space-between;align-items:center;font-size:.73rem;color:var(--faint)}
+.link{background:none;border:none;color:var(--faint);font:inherit;font-size:.73rem;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:4px 0}
 .link[hidden]{display:none}
 
-.note{
-  font-size:.75rem;color:#5d676c;line-height:1.5;
-  border-left:2px solid var(--line);padding-left:10px;
-}
+.note{font-size:.74rem;color:var(--faint);line-height:1.5;border-left:2px solid var(--line);padding-left:10px}
 .note.warn{border-color:var(--clip);color:#c58a80}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -163,36 +117,59 @@ body.muted .primary{background:var(--signal);color:#0e1416}
   <p class="status"><span class="dot"></span><span id="statusText">Micrófono detenido</span></p>
 
   <div class="meter-block">
-    <div class="ladder" id="ladder"><div class="peak" id="peakMark"></div></div>
+    <div class="ladder" id="ladder"><div class="gateline" id="gateLine"></div><div class="peak" id="peakMark"></div></div>
     <div class="scale"><span>−60</span><span>−30</span><span>−18</span><span>−6</span><span>0 dB</span></div>
     <div class="readout">
       <div class="rms" id="rms">−∞<span>dBFS</span></div>
-      <div class="peakval">pico <b id="peak">−∞</b></div>
+      <div class="right">
+        <span>pico <b id="peak">−∞</b></span>
+        <span class="gatepill" id="gatePill">puerta</span>
+      </div>
     </div>
   </div>
 
   <div class="control">
-    <label for="gain">Ganancia del micrófono <b id="gainVal">0.0 dB</b></label>
+    <label for="gain">Ganancia <b id="gainVal">0.0 dB</b></label>
     <input type="range" id="gain" min="-12" max="30" step="0.5" value="0">
   </div>
 
-  <div class="toggles">
-    <button class="tg" id="limiter" aria-pressed="true"><b>Limitador</b>Frena el acople y la saturación</button>
-    <button class="tg" id="hpf" aria-pressed="true"><b>Filtro grave</b>Corta retumbo y ruido de manejo</button>
+  <div class="control">
+    <label for="thr">Umbral de la puerta <b id="thrVal">−45.0 dB</b></label>
+    <input type="range" id="thr" min="-75" max="-15" step="0.5" value="-45">
   </div>
 
-  <p class="note warn" id="feedbackNote" hidden>Nivel muy alto y sostenido. Aléjate de la bocina o baja la ganancia.</p>
-
-  <div class="spacer"></div>
-
-  <button class="primary" id="main">Activar micrófono</button>
-
-  <div class="footer">
-    <span id="latency">Latencia del teléfono: —</span>
-    <button class="link" id="stop" hidden>Liberar micrófono</button>
+  <div class="row">
+    <button class="act" id="learn" style="flex:1" disabled>Calibrar con el ruido del sitio</button>
   </div>
 
+  <div class="row">
+    <button class="tg" id="voice" aria-pressed="true"><b>Banda de voz</b>100 Hz – 7.5 kHz + presencia</button>
+    <button class="tg" id="gateOn" aria-pressed="true"><b>Puerta</b>Silencia entre frases</button>
+  </div>
+  <div class="row">
+    <button class="tg" id="ns" aria-pressed="false"><b>Supresor del sistema</b>Motor de Chrome, +15 ms</button>
+    <button class="tg" id="limiter" aria-pressed="true"><b>Limitador</b>Frena acople y saturación</button>
+  </div>
+
+  <div class="panel">
+    <h2>Latencia real de ida y vuelta</h2>
+    <p>Acerca el teléfono a la bocina y sube su volumen. Emite un pulso y cronometra cuándo vuelve por el micrófono.</p>
+    <div class="measure">
+      <button class="act" id="measure" disabled>Medir</button>
+      <div class="res" id="measureRes">—<small>sin medir</small></div>
+    </div>
+  </div>
+
+  <p class="note warn" id="feedbackNote" hidden>Nivel alto sostenido. Aléjate de la bocina o baja la ganancia.</p>
   <p class="note" id="err" hidden></p>
+
+  <div class="foot">
+    <button class="primary" id="main">Activar micrófono</button>
+    <div class="footline">
+      <span id="latency">Latencia del teléfono: —</span>
+      <button class="link" id="stop" hidden>Liberar micrófono</button>
+    </div>
+  </div>
 
 </div>
 
@@ -200,241 +177,379 @@ body.muted .primary{background:var(--signal);color:#0e1416}
 (function(){
   "use strict";
 
-  var SEGMENTS = 34, MIN_DB = -60;
-  var ladder = document.getElementById('ladder');
-  var segs = [];
-  for (var i = 0; i < SEGMENTS; i++){
-    var d = document.createElement('div');
-    d.className = 'seg';
-    ladder.appendChild(d);
-    segs.push(d);
+  /* ---------- AudioWorklet: puerta de ruido + detector de pulso ---------- */
+  var WORKLET = `
+  class VoiceGate extends AudioWorkletProcessor {
+    static get parameterDescriptors(){
+      return [
+        {name:'threshold', defaultValue:-45, minValue:-90, maxValue:0, automationRate:'k-rate'},
+        {name:'bypass',    defaultValue:0,   minValue:0,   maxValue:1,  automationRate:'k-rate'}
+      ];
+    }
+    constructor(){
+      super();
+      this.env=0; this.g=0; this.hold=0; this.tick=0;
+      this.learnLeft=0; this.learnSum=0; this.learnN=0;
+      this.armFrame=-1; this.found=false;
+      this.atk    = Math.exp(-1/(0.004*sampleRate));
+      this.rel    = Math.exp(-1/(0.180*sampleRate));
+      this.envRel = Math.exp(-1/(0.040*sampleRate));
+      this.holdN  = Math.round(0.220*sampleRate);
+      this.port.onmessage = (e)=>{
+        var d=e.data;
+        if(d.type==='learn'){ this.learnLeft=Math.round(d.sec*sampleRate); this.learnSum=0; this.learnN=0; }
+        else if(d.type==='arm'){ this.armFrame=d.frame; this.found=false; this.armThr=d.thr; }
+        else if(d.type==='disarm'){ this.armFrame=-1; }
+      };
+    }
+    process(inputs, outputs, p){
+      var inp=inputs[0], outp=outputs[0];
+      if(!outp || !outp.length) return true;
+      var y=outp[0];
+      var x=(inp && inp.length) ? inp[0] : null;
+      if(!x){ y.fill(0); return true; }
+
+      var thr=Math.pow(10, p.threshold[0]/20);
+      var bypass=p.bypass[0]>0.5;
+      var n=x.length, i;
+
+      if(this.learnLeft>0){
+        for(i=0;i<n;i++) this.learnSum+=x[i]*x[i];
+        this.learnN+=n; this.learnLeft-=n;
+        if(this.learnLeft<=0){
+          var r=Math.sqrt(this.learnSum/Math.max(1,this.learnN));
+          this.port.postMessage({type:'noise', db: r>1e-9 ? 20*Math.log10(r) : -90});
+        }
+      }
+
+      if(this.armFrame>=0 && !this.found){
+        var base=currentFrame;
+        for(i=0;i<n;i++){
+          if(base+i < this.armFrame) continue;
+          if(Math.abs(x[i]) > this.armThr){
+            this.found=true;
+            this.port.postMessage({type:'onset', frame: base+i});
+            break;
+          }
+        }
+      }
+
+      for(i=0;i<n;i++){
+        var a=x[i]<0?-x[i]:x[i];
+        this.env = a>this.env ? a : a + (this.env-a)*this.envRel;
+        var t;
+        if(this.env>thr){ t=1; this.hold=this.holdN; }
+        else if(this.hold>0){ t=1; this.hold--; }
+        else t=0;
+        var c = t>this.g ? this.atk : this.rel;
+        this.g = t + (this.g-t)*c;
+        y[i] = bypass ? x[i] : x[i]*this.g;
+      }
+
+      if((++this.tick & 7)===0) this.port.postMessage({type:'gate', open:this.g>0.5});
+      return true;
+    }
   }
+  registerProcessor('voice-gate', VoiceGate);
+  `;
 
-  var ui = {
-    main: document.getElementById('main'),
-    stop: document.getElementById('stop'),
-    gain: document.getElementById('gain'),
-    gainVal: document.getElementById('gainVal'),
-    limiter: document.getElementById('limiter'),
-    hpf: document.getElementById('hpf'),
-    rms: document.getElementById('rms'),
-    peak: document.getElementById('peak'),
-    peakMark: document.getElementById('peakMark'),
-    status: document.getElementById('statusText'),
-    latency: document.getElementById('latency'),
-    err: document.getElementById('err'),
-    fb: document.getElementById('feedbackNote')
-  };
+  var SEGMENTS=34, MIN_DB=-60;
+  var ladder=document.getElementById('ladder'), segs=[];
+  for(var i=0;i<SEGMENTS;i++){ var d=document.createElement('div'); d.className='seg'; ladder.appendChild(d); segs.push(d); }
 
-  var ctx = null, stream = null, src = null;
-  var hpNode = null, gainNode = null, compNode = null, analyser = null, outNode = null;
-  var buf = null, raf = 0, wakeLock = null;
-  var running = false, muted = false;
-  var peakHold = 0, peakHoldAt = 0, clipUntil = 0, hotSince = 0;
+  var ui={};
+  ['main','stop','gain','gainVal','thr','thrVal','learn','voice','gateOn','ns','limiter',
+   'measure','measureRes','rms','peak','peakMark','gateLine','gatePill','statusText',
+   'latency','err','feedbackNote'].forEach(function(id){ ui[id]=document.getElementById(id); });
 
-  function dbToLin(db){ return Math.pow(10, db / 20); }
-  function linToDb(v){ return v > 0 ? 20 * Math.log10(v) : -Infinity; }
-  function fmt(db){ return db === -Infinity || db < MIN_DB ? '−∞' : (db < 0 ? '−' : '+') + Math.abs(db).toFixed(1); }
+  var ctx=null, stream=null, src=null;
+  var hp1=null, hp2=null, lp=null, pres=null, gateNode=null, gainNode=null, comp=null, analyser=null, micOut=null;
+  var buf=null, raf=0, wakeLock=null, workletURL=null, workletReady=false;
+  var running=false, muted=false, testing=false;
+  var peakHold=0, peakHoldAt=0, clipUntil=0, hotSince=0;
 
-  function showError(msg){
-    ui.err.textContent = msg;
-    ui.err.hidden = false;
-    ui.err.classList.add('warn');
+  function dbToLin(db){ return Math.pow(10, db/20); }
+  function linToDb(v){ return v>1e-9 ? 20*Math.log10(v) : -Infinity; }
+  function fmt(db){ return (db===-Infinity||db<MIN_DB) ? '−∞' : (db<0?'−':'+')+Math.abs(db).toFixed(1); }
+  function pct(db){ return ((Math.max(db,MIN_DB)-MIN_DB)/-MIN_DB)*100; }
+  function on(btn){ return btn.getAttribute('aria-pressed')==='true'; }
+
+  function showError(m){ ui.err.textContent=m; ui.err.hidden=false; ui.err.classList.add('warn'); }
+  function clearError(){ ui.err.hidden=true; }
+
+  async function getStream(){
+    return navigator.mediaDevices.getUserMedia({
+      audio:{
+        echoCancellation:false,
+        noiseSuppression:on(ui.ns),
+        autoGainControl:false,
+        channelCount:1
+      },
+      video:false
+    });
   }
-  function clearError(){ ui.err.hidden = true; }
 
   async function build(){
-    stream = await navigator.mediaDevices.getUserMedia({
-      audio: {
-        echoCancellation: false,
-        noiseSuppression: false,
-        autoGainControl: false,
-        channelCount: 1
-      },
-      video: false
-    });
+    stream = await getStream();
+    ctx = new (window.AudioContext||window.webkitAudioContext)({latencyHint:0});
+    if(ctx.state==='suspended') await ctx.resume();
 
-    ctx = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: 'interactive' });
-    if (ctx.state === 'suspended') await ctx.resume();
+    try{
+      if(!workletURL) workletURL = URL.createObjectURL(new Blob([WORKLET],{type:'application/javascript'}));
+      await ctx.audioWorklet.addModule(workletURL);
+      workletReady = true;
+    }catch(e){ workletReady=false; }
 
     src = ctx.createMediaStreamSource(stream);
 
-    hpNode = ctx.createBiquadFilter();
-    hpNode.type = 'highpass';
-    hpNode.frequency.value = 110;
-    hpNode.Q.value = 0.707;
+    // Dos pasa-altos en cascada: 24 dB/oct bajo 100 Hz, mata retumbo y manejo
+    hp1=ctx.createBiquadFilter(); hp1.type='highpass'; hp1.frequency.value=100; hp1.Q.value=0.707;
+    hp2=ctx.createBiquadFilter(); hp2.type='highpass'; hp2.frequency.value=100; hp2.Q.value=0.707;
+    // Pasa-bajos: sobre 7.5 kHz casi solo hay siseo y ruido ambiente
+    lp=ctx.createBiquadFilter();  lp.type='lowpass';   lp.frequency.value=7500; lp.Q.value=0.707;
+    // Realce de presencia: la banda donde vive la inteligibilidad de las consonantes
+    pres=ctx.createBiquadFilter(); pres.type='peaking'; pres.frequency.value=2600; pres.Q.value=0.9; pres.gain.value=3.5;
 
-    gainNode = ctx.createGain();
-    gainNode.gain.value = dbToLin(parseFloat(ui.gain.value));
+    if(workletReady){
+      gateNode = new AudioWorkletNode(ctx,'voice-gate',{numberOfInputs:1,numberOfOutputs:1,outputChannelCount:[1]});
+      gateNode.parameters.get('threshold').value = parseFloat(ui.thr.value);
+      gateNode.port.onmessage = onWorklet;
+    } else {
+      ui.gateOn.disabled=true; ui.gateOn.setAttribute('aria-pressed','false');
+      ui.learn.disabled=true; ui.measure.disabled=true;
+    }
 
-    compNode = ctx.createDynamicsCompressor();
-    compNode.threshold.value = -6;
-    compNode.knee.value = 0;
-    compNode.ratio.value = 20;
-    compNode.attack.value = 0.003;
-    compNode.release.value = 0.12;
+    gainNode=ctx.createGain(); gainNode.gain.value=dbToLin(parseFloat(ui.gain.value));
 
-    analyser = ctx.createAnalyser();
-    analyser.fftSize = 2048;
-    analyser.smoothingTimeConstant = 0;
-    buf = new Float32Array(analyser.fftSize);
+    comp=ctx.createDynamicsCompressor();
+    comp.threshold.value=-6; comp.knee.value=0; comp.ratio.value=20;
+    comp.attack.value=0.003; comp.release.value=0.12;
 
-    outNode = ctx.createGain();
-    outNode.gain.value = 1;
+    analyser=ctx.createAnalyser(); analyser.fftSize=1024; analyser.smoothingTimeConstant=0;
+    buf=new Float32Array(analyser.fftSize);
+
+    micOut=ctx.createGain(); micOut.gain.value=1;
 
     wire();
-    outNode.connect(ctx.destination);
+    micOut.connect(ctx.destination);
 
-    var ms = (ctx.baseLatency || 0) + (ctx.outputLatency || 0);
-    ui.latency.textContent = ms > 0
-      ? 'Latencia del teléfono: ' + Math.round(ms * 1000) + ' ms'
-      : 'Latencia del teléfono: no reportada';
+    var s=(ctx.baseLatency||0)+(ctx.outputLatency||0);
+    ui.latency.textContent = s>0 ? 'Latencia del teléfono: '+Math.round(s*1000)+' ms'
+                                 : 'Latencia del teléfono: no reportada';
   }
 
-  // reconecta la cadena según los interruptores activos
   function wire(){
-    [src, hpNode, gainNode, compNode, analyser].forEach(function(n){
-      if (n) try { n.disconnect(); } catch(e){}
-    });
-    var chain = [src];
-    if (ui.hpf.getAttribute('aria-pressed') === 'true') chain.push(hpNode);
+    [src,hp1,hp2,lp,pres,gateNode,gainNode,comp,analyser].forEach(function(n){ if(n) try{n.disconnect();}catch(e){} });
+    var chain=[src];
+    if(on(ui.voice)) chain.push(hp1,hp2,lp,pres);
+    if(gateNode) chain.push(gateNode);          // siempre en la cadena; se puentea por parámetro
     chain.push(gainNode);
-    if (ui.limiter.getAttribute('aria-pressed') === 'true') chain.push(compNode);
+    if(on(ui.limiter)) chain.push(comp);
     chain.push(analyser);
-    for (var i = 0; i < chain.length - 1; i++) chain[i].connect(chain[i + 1]);
-    analyser.connect(outNode);
+    for(var i=0;i<chain.length-1;i++) chain[i].connect(chain[i+1]);
+    analyser.connect(micOut);
+    if(gateNode) gateNode.parameters.get('bypass').value = (on(ui.gateOn) && !testing) ? 0 : 1;
   }
 
+  /* ---------- mensajes del worklet ---------- */
+  var onsetResolve=null;
+  function onWorklet(e){
+    var d=e.data;
+    if(d.type==='gate'){ ui.gatePill.classList.toggle('open', !!d.open); }
+    else if(d.type==='noise'){
+      var t=Math.max(-75, Math.min(-15, d.db+9));
+      ui.thr.value=t.toFixed(1);
+      ui.thr.dispatchEvent(new Event('input'));
+      ui.learn.textContent='Ruido de fondo: '+fmt(d.db)+' dBFS';
+      ui.learn.disabled=false;
+      setTimeout(function(){ ui.learn.textContent='Calibrar con el ruido del sitio'; },4000);
+    }
+    else if(d.type==='onset' && onsetResolve){ onsetResolve(d.frame); onsetResolve=null; }
+  }
+
+  /* ---------- medidor ---------- */
   function loop(){
-    raf = requestAnimationFrame(loop);
-    if (!analyser) return;
+    raf=requestAnimationFrame(loop);
+    if(!analyser) return;
     analyser.getFloatTimeDomainData(buf);
+    var sum=0, pk=0;
+    for(var i=0;i<buf.length;i++){ var s=buf[i]; sum+=s*s; var a=s<0?-s:s; if(a>pk)pk=a; }
+    var rmsDb=linToDb(Math.sqrt(sum/buf.length)), pkDb=linToDb(pk), now=performance.now();
 
-    var sum = 0, pk = 0;
-    for (var i = 0; i < buf.length; i++){
-      var s = buf[i];
-      sum += s * s;
-      var a = s < 0 ? -s : s;
-      if (a > pk) pk = a;
+    if(pk>=peakHold){ peakHold=pk; peakHoldAt=now; }
+    else if(now-peakHoldAt>1200) peakHold*=0.93;
+
+    if(pk>=0.995) clipUntil=now+800;
+    document.body.classList.toggle('clipping', now<clipUntil);
+
+    if(!muted && !testing && rmsDb>-8){ if(!hotSince) hotSince=now; } else hotSince=0;
+    ui.feedbackNote.hidden = !(hotSince && now-hotSince>2000);
+
+    var lit=Math.round((Math.max(rmsDb,MIN_DB)-MIN_DB)/-MIN_DB*SEGMENTS);
+    for(var j=0;j<SEGMENTS;j++){
+      var f=j/(SEGMENTS-1);
+      segs[j].style.background = j<lit ? (f>0.88?'var(--clip)':f>0.72?'var(--hot)':'var(--signal)') : '#2b3134';
     }
-    var rms = Math.sqrt(sum / buf.length);
-    var rmsDb = linToDb(rms);
-    var pkDb = linToDb(pk);
-    var now = performance.now();
+    var ph=linToDb(peakHold);
+    ui.peakMark.style.opacity = ph>MIN_DB?'1':'0';
+    if(ph>MIN_DB) ui.peakMark.style.left=pct(ph)+'%';
 
-    if (pk >= peakHold){ peakHold = pk; peakHoldAt = now; }
-    else if (now - peakHoldAt > 1200){ peakHold *= 0.93; }
+    ui.rms.innerHTML=fmt(rmsDb)+'<span>dBFS</span>';
+    ui.peak.textContent=fmt(pkDb);
+  }
 
-    if (pk >= 0.995) clipUntil = now + 800;
-    document.body.classList.toggle('clipping', now < clipUntil);
+  /* ---------- medición de latencia de ida y vuelta ---------- */
+  async function measure(){
+    if(!running || !gateNode || testing) return;
+    testing=true;
+    ui.measure.disabled=true;
+    ui.measureRes.innerHTML='···<small>emitiendo pulso</small>';
+    var prevBypass=gateNode.parameters.get('bypass').value;
+    gateNode.parameters.get('bypass').value=1;
+    var prevOut=micOut.gain.value;
+    micOut.gain.setValueAtTime(0, ctx.currentTime);   // corta el monitoreo para evitar acople
 
-    // aviso de acople: nivel alto sostenido por más de 2 s
-    if (!muted && rmsDb > -8){ if (!hotSince) hotSince = now; }
-    else hotSince = 0;
-    ui.fb.hidden = !(hotSince && now - hotSince > 2000);
+    await new Promise(function(r){ setTimeout(r,250); });
 
-    var lit = Math.round(((Math.max(rmsDb, MIN_DB) - MIN_DB) / -MIN_DB) * SEGMENTS);
-    for (var j = 0; j < SEGMENTS; j++){
-      var frac = j / (SEGMENTS - 1);
-      var color = frac > 0.88 ? 'var(--clip)' : frac > 0.72 ? 'var(--hot)' : 'var(--signal)';
-      segs[j].style.background = j < lit ? color : '#2b3134';
-    }
+    var t0=ctx.currentTime+0.25;
+    var armFrame=Math.round(t0*ctx.sampleRate);
 
-    var phDb = linToDb(peakHold);
-    if (phDb > MIN_DB){
-      ui.peakMark.style.opacity = '1';
-      ui.peakMark.style.left = (((phDb - MIN_DB) / -MIN_DB) * 100) + '%';
+    var osc=ctx.createOscillator(); osc.type='sine'; osc.frequency.value=1000;
+    var env=ctx.createGain(); env.gain.value=0;
+    osc.connect(env); env.connect(ctx.destination);
+    env.gain.setValueAtTime(0,t0);
+    env.gain.linearRampToValueAtTime(1,t0+0.002);
+    env.gain.setValueAtTime(1,t0+0.030);
+    env.gain.linearRampToValueAtTime(0,t0+0.035);
+    osc.start(t0); osc.stop(t0+0.08);
+
+    gateNode.port.postMessage({type:'arm', frame:armFrame, thr:0.05});
+
+    var frame = await new Promise(function(resolve){
+      onsetResolve=resolve;
+      setTimeout(function(){ if(onsetResolve){ onsetResolve=null; resolve(null); } },4000);
+    });
+    gateNode.port.postMessage({type:'disarm'});
+
+    if(frame===null){
+      ui.measureRes.innerHTML='—<small>no se detectó, sube el volumen</small>';
     } else {
-      ui.peakMark.style.opacity = '0';
+      var ms=(frame-armFrame)/ctx.sampleRate*1000;
+      var phone=Math.round(((ctx.baseLatency||0)+(ctx.outputLatency||0))*1000);
+      ui.measureRes.innerHTML=Math.round(ms)+' ms<small>total · teléfono ≈ '+phone+' ms</small>';
     }
 
-    ui.rms.innerHTML = fmt(rmsDb) + '<span>dBFS</span>';
-    ui.peak.textContent = fmt(pkDb);
+    micOut.gain.setValueAtTime(muted?0:prevOut, ctx.currentTime);
+    gateNode.parameters.get('bypass').value=prevBypass;
+    testing=false;
+    ui.measure.disabled=false;
+    wire();
   }
 
   async function keepAwake(){
-    try {
-      if ('wakeLock' in navigator && !wakeLock) wakeLock = await navigator.wakeLock.request('screen');
-    } catch(e){}
+    try{ if('wakeLock' in navigator && !wakeLock) wakeLock=await navigator.wakeLock.request('screen'); }catch(e){}
   }
-  document.addEventListener('visibilitychange', function(){
-    if (document.visibilityState === 'visible' && running) keepAwake();
-    else wakeLock = null;
+  document.addEventListener('visibilitychange',function(){
+    if(document.visibilityState==='visible' && running) keepAwake(); else wakeLock=null;
   });
 
   function setState(){
     document.body.classList.toggle('live', running && !muted);
     document.body.classList.toggle('muted', running && muted);
-    ui.stop.hidden = !running;
-    if (!running){
-      ui.main.textContent = 'Activar micrófono';
-      ui.status.textContent = 'Micrófono detenido';
-    } else if (muted){
-      ui.main.textContent = 'Reanudar';
-      ui.status.textContent = 'Silenciado';
-    } else {
-      ui.main.textContent = 'Silenciar';
-      ui.status.textContent = 'Transmitiendo a la salida de audio';
-    }
+    ui.stop.hidden=!running;
+    ui.learn.disabled = !(running && workletReady);
+    ui.measure.disabled = !(running && workletReady) || testing;
+    if(!running){ ui.main.textContent='Activar micrófono'; ui.statusText.textContent='Micrófono detenido'; }
+    else if(muted){ ui.main.textContent='Reanudar'; ui.statusText.textContent='Silenciado'; }
+    else { ui.main.textContent='Silenciar'; ui.statusText.textContent='Transmitiendo a la salida de audio'; }
   }
 
   ui.main.addEventListener('click', async function(){
     clearError();
-    if (!running){
-      try {
+    if(!running){
+      try{
         await build();
-        running = true; muted = false;
-        outNode.gain.setTargetAtTime(1, ctx.currentTime, 0.01);
+        running=true; muted=false;
+        micOut.gain.setTargetAtTime(1,ctx.currentTime,0.01);
         keepAwake();
-        cancelAnimationFrame(raf);
-        loop();
-      } catch(e){
-        showError(e && e.name === 'NotAllowedError'
+        cancelAnimationFrame(raf); loop();
+      }catch(e){
+        showError(e && e.name==='NotAllowedError'
           ? 'Permiso de micrófono denegado. Habilítalo para este sitio y vuelve a intentar.'
-          : 'No se pudo abrir el micrófono: ' + (e && e.message ? e.message : e));
+          : 'No se pudo abrir el micrófono: '+(e && e.message ? e.message : e));
         return;
       }
     } else {
-      muted = !muted;
-      outNode.gain.setTargetAtTime(muted ? 0 : 1, ctx.currentTime, 0.015);
+      muted=!muted;
+      micOut.gain.setTargetAtTime(muted?0:1, ctx.currentTime, 0.015);
     }
     setState();
   });
 
   ui.stop.addEventListener('click', function(){
     cancelAnimationFrame(raf);
-    if (stream) stream.getTracks().forEach(function(t){ t.stop(); });
-    if (ctx) ctx.close();
-    ctx = stream = src = analyser = null;
-    running = false; muted = false; peakHold = 0; hotSince = 0;
-    wakeLock = null;
-    ui.rms.innerHTML = '−∞<span>dBFS</span>';
-    ui.peak.textContent = '−∞';
-    ui.peakMark.style.opacity = '0';
-    ui.fb.hidden = true;
-    segs.forEach(function(s){ s.style.background = '#2b3134'; });
+    if(stream) stream.getTracks().forEach(function(t){ t.stop(); });
+    if(ctx) ctx.close();
+    ctx=stream=src=analyser=gateNode=null;
+    running=false; muted=false; testing=false; peakHold=0; hotSince=0; wakeLock=null;
+    ui.rms.innerHTML='−∞<span>dBFS</span>'; ui.peak.textContent='−∞';
+    ui.peakMark.style.opacity='0'; ui.feedbackNote.hidden=true;
+    ui.gatePill.classList.remove('open');
+    segs.forEach(function(s){ s.style.background='#2b3134'; });
     document.body.classList.remove('clipping');
     setState();
   });
 
   ui.gain.addEventListener('input', function(){
-    var db = parseFloat(ui.gain.value);
-    ui.gainVal.textContent = (db > 0 ? '+' : db < 0 ? '−' : '') + Math.abs(db).toFixed(1) + ' dB';
-    if (gainNode) gainNode.gain.setTargetAtTime(dbToLin(db), ctx.currentTime, 0.02);
+    var db=parseFloat(ui.gain.value);
+    ui.gainVal.textContent=(db>0?'+':db<0?'−':'')+Math.abs(db).toFixed(1)+' dB';
+    if(gainNode) gainNode.gain.setTargetAtTime(dbToLin(db), ctx.currentTime, 0.02);
   });
 
-  [ui.limiter, ui.hpf].forEach(function(btn){
-    btn.addEventListener('click', function(){
-      btn.setAttribute('aria-pressed', btn.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
-      if (running) wire();
+  ui.thr.addEventListener('input', function(){
+    var db=parseFloat(ui.thr.value);
+    ui.thrVal.textContent=fmt(db)+' dB';
+    ui.gateLine.style.left=pct(db)+'%';
+    if(gateNode) gateNode.parameters.get('threshold').value=db;
+  });
+
+  ui.learn.addEventListener('click', function(){
+    if(!gateNode) return;
+    ui.learn.textContent='Escuchando el ambiente… guarda silencio';
+    ui.learn.disabled=true;
+    gateNode.port.postMessage({type:'learn', sec:1.8});
+  });
+
+  ui.measure.addEventListener('click', measure);
+
+  [ui.voice, ui.gateOn, ui.limiter].forEach(function(b){
+    b.addEventListener('click', function(){
+      b.setAttribute('aria-pressed', on(b)?'false':'true');
+      if(running) wire();
     });
   });
 
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+  // El supresor del sistema exige volver a pedir el stream con otras restricciones
+  ui.ns.addEventListener('click', async function(){
+    ui.ns.setAttribute('aria-pressed', on(ui.ns)?'false':'true');
+    if(!running) return;
+    ui.ns.disabled=true;
+    try{
+      stream.getTracks().forEach(function(t){ t.stop(); });
+      stream = await getStream();
+      try{ src.disconnect(); }catch(e){}
+      src = ctx.createMediaStreamSource(stream);
+      wire();
+    }catch(e){ showError('No se pudo reabrir el micrófono: '+(e.message||e)); }
+    ui.ns.disabled=false;
+  });
+
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
     showError('Este navegador no expone el micrófono. Ábrelo en Chrome sobre https:// o localhost.');
-    ui.main.disabled = true;
+    ui.main.disabled=true;
   }
 
+  ui.gateLine.style.left=pct(parseFloat(ui.thr.value))+'%';
   setState();
 })();
 </script>
