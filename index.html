@@ -10,29 +10,15 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#17191b;
-  --panel:#202427;
-  --line:#343b40;
-  --dim:#7c878e;
-  --faint:#5d676c;
-  --text:#e9ebeb;
-  --signal:#4dd0c0;
-  --hot:#f5c542;
-  --clip:#ff5c46;
-  --radius:6px;
+  --bg:#17191b; --panel:#202427; --line:#343b40; --dim:#7c878e; --faint:#5d676c;
+  --text:#e9ebeb; --signal:#4dd0c0; --hot:#f5c542; --clip:#ff5c46; --radius:6px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
-body{
-  background:var(--bg);color:var(--text);
+body{background:var(--bg);color:var(--text);
   font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  font-variant-numeric:tabular-nums;
-  display:flex;justify-content:center;overscroll-behavior:none;
-}
-.app{
-  width:100%;max-width:460px;min-height:100dvh;
-  padding:16px 16px 0;display:flex;flex-direction:column;gap:14px;
-}
+  font-variant-numeric:tabular-nums;display:flex;justify-content:center;overscroll-behavior:none}
+.app{width:100%;max-width:460px;min-height:100dvh;padding:16px 16px 0;display:flex;flex-direction:column;gap:13px}
 
 .status{display:flex;align-items:center;gap:9px;font-size:.82rem;color:var(--dim)}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--line);flex:none;transition:background .18s}
@@ -40,23 +26,24 @@ body.live .dot{background:var(--signal);box-shadow:0 0 10px var(--signal)}
 body.muted .dot{background:var(--hot)}
 
 .meter-block{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px 13px 11px}
-.ladder{display:flex;gap:3px;height:58px;position:relative}
+.ladder{display:flex;gap:3px;height:54px;position:relative}
 .seg{flex:1;border-radius:1.5px;background:#2b3134;transition:background .04s linear}
 .peak{position:absolute;top:0;bottom:0;width:3px;background:var(--text);border-radius:2px;opacity:0;transition:opacity .2s;pointer-events:none}
 .gateline{position:absolute;top:-3px;bottom:-3px;width:1px;background:var(--hot);opacity:.55;pointer-events:none}
 .scale{display:flex;justify-content:space-between;margin-top:8px;font-size:.66rem;color:var(--faint)}
 .readout{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
-.rms{font-size:1.7rem;font-weight:600;line-height:1;letter-spacing:-.02em}
-.rms span{font-size:.82rem;font-weight:400;color:var(--dim);margin-left:3px;letter-spacing:0}
-.right{display:flex;align-items:center;gap:12px;font-size:.78rem;color:var(--dim)}
+.rms{font-size:1.6rem;font-weight:600;line-height:1;letter-spacing:-.02em}
+.rms span{font-size:.8rem;font-weight:400;color:var(--dim);margin-left:3px;letter-spacing:0}
+.right{display:flex;align-items:center;gap:10px;font-size:.75rem;color:var(--dim)}
 .right b{color:var(--text);font-weight:500}
-.gatepill{padding:3px 8px;border-radius:20px;border:1px solid var(--line);color:var(--faint);font-size:.72rem;transition:all .1s}
-.gatepill.open{border-color:var(--signal);color:var(--signal)}
+.pill{padding:3px 8px;border-radius:20px;border:1px solid var(--line);color:var(--faint);font-size:.7rem;transition:all .1s;white-space:nowrap}
+.pill.open{border-color:var(--signal);color:var(--signal)}
+.pill.red{border-color:var(--clip);color:var(--clip)}
 body.clipping .rms{color:var(--clip)}
 
-.control label{display:flex;justify-content:space-between;align-items:baseline;font-size:.82rem;color:var(--dim);margin-bottom:8px}
-.control label b{font-size:1rem;color:var(--text);font-weight:600}
-input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:32px;background:transparent;cursor:pointer;display:block}
+.control label{display:flex;justify-content:space-between;align-items:baseline;font-size:.8rem;color:var(--dim);margin-bottom:7px}
+.control label b{font-size:.98rem;color:var(--text);font-weight:600}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:30px;background:transparent;cursor:pointer;display:block}
 input[type=range]::-webkit-slider-runnable-track{height:5px;border-radius:3px;background:linear-gradient(90deg,#2b3134,#414a4f)}
 input[type=range]::-moz-range-track{height:5px;border-radius:3px;background:#333b3f}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;border-radius:50%;background:var(--text);margin-top:-12.5px;border:5px solid var(--bg);box-shadow:0 0 0 1px var(--line)}
@@ -64,48 +51,38 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
 input[type=range]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 2px var(--signal)}
 
 .row{display:flex;gap:8px}
-.tg{
-  flex:1;background:transparent;color:var(--dim);border:1px solid var(--line);
-  border-radius:var(--radius);padding:10px 9px;font:inherit;font-size:.76rem;
-  text-align:left;line-height:1.3;cursor:pointer;transition:border-color .15s,color .15s,background .15s;
-}
-.tg b{display:block;font-weight:500;font-size:.85rem;color:var(--text);margin-bottom:2px}
+.tg{flex:1;background:transparent;color:var(--dim);border:1px solid var(--line);border-radius:var(--radius);
+  padding:10px 9px;font:inherit;font-size:.74rem;text-align:left;line-height:1.3;cursor:pointer;
+  transition:border-color .15s,color .15s,background .15s}
+.tg b{display:block;font-weight:500;font-size:.84rem;color:var(--text);margin-bottom:2px}
 .tg[aria-pressed=true]{border-color:var(--signal);background:rgba(77,208,192,.08);color:var(--signal)}
 .tg[aria-pressed=true] b{color:var(--signal)}
 .tg:disabled{opacity:.4;cursor:default}
 
-.act{
-  background:transparent;color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
-  padding:11px 14px;font:inherit;font-size:.85rem;cursor:pointer;white-space:nowrap;
-}
+.act{background:transparent;color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
+  padding:11px 14px;font:inherit;font-size:.83rem;cursor:pointer;white-space:nowrap}
 .act:disabled{opacity:.4;cursor:default}
 .act:active{background:#262b2e}
 
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:13px}
-.panel h2{font-size:.85rem;font-weight:600;margin-bottom:3px}
-.panel p{font-size:.75rem;color:var(--faint);line-height:1.45;margin-bottom:11px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:13px;display:flex;flex-direction:column;gap:11px}
+.panel h2{font-size:.85rem;font-weight:600}
+.panel p{font-size:.74rem;color:var(--faint);line-height:1.45;margin-top:-6px}
 .measure{display:flex;align-items:center;gap:11px}
-.measure .res{font-size:1.25rem;font-weight:600;line-height:1.1}
-.measure .res small{display:block;font-size:.68rem;font-weight:400;color:var(--faint);letter-spacing:0}
+.measure .res{font-size:1.2rem;font-weight:600;line-height:1.1}
+.measure .res small{display:block;font-size:.67rem;font-weight:400;color:var(--faint)}
+.notchrow{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:.75rem;color:var(--dim)}
+.notchlist{font-size:.72rem;color:var(--faint);line-height:1.5;min-height:1em}
 
-.foot{
-  position:sticky;bottom:0;background:var(--bg);
-  padding:10px 0 calc(14px + env(safe-area-inset-bottom));
-  margin-top:auto;display:flex;flex-direction:column;gap:9px;
-}
-.primary{
-  width:100%;border:none;border-radius:var(--radius);padding:20px;
-  font:inherit;font-size:1.1rem;font-weight:600;
-  background:var(--signal);color:#0e1416;cursor:pointer;transition:background .15s,color .15s;
-}
+.foot{position:sticky;bottom:0;background:var(--bg);padding:10px 0 calc(14px + env(safe-area-inset-bottom));
+  margin-top:auto;display:flex;flex-direction:column;gap:9px}
+.primary{width:100%;border:none;border-radius:var(--radius);padding:20px;font:inherit;font-size:1.1rem;
+  font-weight:600;background:var(--signal);color:#0e1416;cursor:pointer;transition:background .15s,color .15s}
 .primary:active{opacity:.85}
 body.live .primary{background:var(--hot);color:#241d05}
 body.muted .primary{background:var(--signal);color:#0e1416}
-.primary:focus-visible{outline:2px solid var(--text);outline-offset:3px}
-.footline{display:flex;justify-content:space-between;align-items:center;font-size:.73rem;color:var(--faint)}
-.link{background:none;border:none;color:var(--faint);font:inherit;font-size:.73rem;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:4px 0}
+.footline{display:flex;justify-content:space-between;align-items:center;font-size:.72rem;color:var(--faint)}
+.link{background:none;border:none;color:var(--faint);font:inherit;font-size:.72rem;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:4px 0}
 .link[hidden]{display:none}
-
 .note{font-size:.74rem;color:var(--faint);line-height:1.5;border-left:2px solid var(--line);padding-left:10px}
 .note.warn{border-color:var(--clip);color:#c58a80}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -122,8 +99,8 @@ body.muted .primary{background:var(--signal);color:#0e1416}
     <div class="readout">
       <div class="rms" id="rms">−∞<span>dBFS</span></div>
       <div class="right">
-        <span>pico <b id="peak">−∞</b></span>
-        <span class="gatepill" id="gatePill">puerta</span>
+        <span>tope <b id="gr">0</b></span>
+        <span class="pill" id="gatePill">puerta</span>
       </div>
     </div>
   </div>
@@ -133,34 +110,49 @@ body.muted .primary{background:var(--signal);color:#0e1416}
     <input type="range" id="gain" min="-12" max="30" step="0.5" value="0">
   </div>
 
+  <div class="panel">
+    <h2>Anti-acople</h2>
+    <p>Rompe el lazo entre la bocina y el micrófono. Súbelo hasta que el pitido no arranque.</p>
+    <div class="control">
+      <label for="shift">Desplazamiento de frecuencia <b id="shiftVal">5.0 Hz</b></label>
+      <input type="range" id="shift" min="0" max="12" step="0.5" value="5">
+    </div>
+    <div class="notchrow">
+      <span>Notch adaptativo</span>
+      <span><b id="notchCount">0</b> / 6 activos</span>
+    </div>
+    <div class="notchlist" id="notchList">sin frecuencias atrapadas</div>
+    <div class="row">
+      <button class="tg" id="notchOn" aria-pressed="true" style="flex:2"><b>Cazar acoples</b>Coloca filtros donde se dispara</button>
+      <button class="act" id="notchReset" style="flex:1">Borrar</button>
+    </div>
+  </div>
+
   <div class="control">
     <label for="thr">Umbral de la puerta <b id="thrVal">−45.0 dB</b></label>
-    <input type="range" id="thr" min="-75" max="-15" step="0.5" value="-45">
+    <input type="range" id="thr" min="-80" max="-20" step="0.5" value="-45">
   </div>
+  <button class="act" id="learn" disabled>Calibrar con el ruido del sitio</button>
 
   <div class="row">
-    <button class="act" id="learn" style="flex:1" disabled>Calibrar con el ruido del sitio</button>
-  </div>
-
-  <div class="row">
-    <button class="tg" id="voice" aria-pressed="true"><b>Banda de voz</b>100 Hz – 7.5 kHz + presencia</button>
+    <button class="tg" id="voice" aria-pressed="true"><b>Banda de voz</b>150 Hz – 7.5 kHz + presencia</button>
     <button class="tg" id="gateOn" aria-pressed="true"><b>Puerta</b>Silencia entre frases</button>
   </div>
   <div class="row">
     <button class="tg" id="ns" aria-pressed="false"><b>Supresor del sistema</b>Motor de Chrome, +15 ms</button>
-    <button class="tg" id="limiter" aria-pressed="true"><b>Limitador</b>Frena acople y saturación</button>
+    <button class="tg" id="limiter" aria-pressed="true"><b>Limitador</b>Techo duro de salida</button>
   </div>
 
   <div class="panel">
     <h2>Latencia real de ida y vuelta</h2>
-    <p>Acerca el teléfono a la bocina y sube su volumen. Emite un pulso y cronometra cuándo vuelve por el micrófono.</p>
+    <p>Acerca el teléfono a la bocina y sube su volumen. Emite un pulso y cronometra cuándo vuelve.</p>
     <div class="measure">
       <button class="act" id="measure" disabled>Medir</button>
       <div class="res" id="measureRes">—<small>sin medir</small></div>
     </div>
   </div>
 
-  <p class="note warn" id="feedbackNote" hidden>Nivel alto sostenido. Aléjate de la bocina o baja la ganancia.</p>
+  <p class="note warn" id="feedbackNote" hidden>Nivel alto sostenido. Sube el anti-acople o aleja el teléfono de la bocina.</p>
   <p class="note" id="err" hidden></p>
 
   <div class="foot">
@@ -177,243 +169,364 @@ body.muted .primary{background:var(--signal);color:#0e1416}
 (function(){
   "use strict";
 
-  /* ---------- AudioWorklet: puerta de ruido + detector de pulso ---------- */
   var WORKLET = `
+  /* Desplazador de frecuencia por banda lateral única.
+     Rompe la condición de fase del lazo de realimentación: el tono que
+     vuelve por el micrófono ya no coincide consigo mismo y no se acumula. */
+  class FreqShifter extends AudioWorkletProcessor {
+    static get parameterDescriptors(){
+      return [{name:'shift', defaultValue:5, minValue:0, maxValue:12, automationRate:'k-rate'}];
+    }
+    constructor(){
+      super();
+      var N=101; this.N=N; this.mid=(N-1)>>1;
+      this.h=new Float32Array(N);
+      for(var n=0;n<N;n++){
+        var k=n-this.mid;
+        if(k===0 || (k&1)===0){ this.h[n]=0; }
+        else {
+          var w=0.54-0.46*Math.cos(2*Math.PI*n/(N-1));   // Hamming
+          this.h[n]=(2/(Math.PI*k))*w;
+        }
+      }
+      this.buf=new Float32Array(N); this.pos=0; this.phase=0;
+    }
+    process(inputs,outputs,p){
+      var inp=inputs[0], outp=outputs[0];
+      if(!outp||!outp.length) return true;
+      var y=outp[0];
+      var x=(inp&&inp.length)?inp[0]:null;
+      if(!x){ y.fill(0); return true; }
+      var hz=p.shift[0];
+      if(hz<0.05){ y.set(x); return true; }
+      var N=this.N, mid=this.mid, h=this.h, buf=this.buf;
+      var w=2*Math.PI*hz/sampleRate;
+      for(var i=0;i<x.length;i++){
+        buf[this.pos]=x[i];
+        this.pos=(this.pos+1)%N;
+        var q=0;
+        for(var n=1;n<N;n+=2){
+          var idx=this.pos+n; if(idx>=N) idx-=N;
+          q+=h[n]*buf[idx];
+        }
+        var idxI=this.pos+mid; if(idxI>=N) idxI-=N;
+        var iSig=buf[idxI];
+        this.phase+=w; if(this.phase>6.283185307) this.phase-=6.283185307;
+        y[i]=iSig*Math.cos(this.phase)+q*Math.sin(this.phase);   // desplaza hacia abajo
+      }
+      return true;
+    }
+  }
+  registerProcessor('freq-shifter', FreqShifter);
+
   class VoiceGate extends AudioWorkletProcessor {
     static get parameterDescriptors(){
       return [
         {name:'threshold', defaultValue:-45, minValue:-90, maxValue:0, automationRate:'k-rate'},
-        {name:'bypass',    defaultValue:0,   minValue:0,   maxValue:1,  automationRate:'k-rate'}
+        {name:'bypass',    defaultValue:0,   minValue:0,   maxValue:1, automationRate:'k-rate'}
       ];
     }
     constructor(){
       super();
       this.env=0; this.g=0; this.hold=0; this.tick=0;
       this.learnLeft=0; this.learnSum=0; this.learnN=0;
-      this.armFrame=-1; this.found=false;
-      this.atk    = Math.exp(-1/(0.004*sampleRate));
-      this.rel    = Math.exp(-1/(0.180*sampleRate));
-      this.envRel = Math.exp(-1/(0.040*sampleRate));
-      this.holdN  = Math.round(0.220*sampleRate);
-      this.port.onmessage = (e)=>{
+      this.armFrame=-1; this.found=false; this.armThr=0.05;
+      this.atk=Math.exp(-1/(0.004*sampleRate));
+      this.rel=Math.exp(-1/(0.180*sampleRate));
+      this.envRel=Math.exp(-1/(0.040*sampleRate));
+      this.holdN=Math.round(0.220*sampleRate);
+      this.port.onmessage=(e)=>{
         var d=e.data;
         if(d.type==='learn'){ this.learnLeft=Math.round(d.sec*sampleRate); this.learnSum=0; this.learnN=0; }
         else if(d.type==='arm'){ this.armFrame=d.frame; this.found=false; this.armThr=d.thr; }
         else if(d.type==='disarm'){ this.armFrame=-1; }
       };
     }
-    process(inputs, outputs, p){
+    process(inputs,outputs,p){
       var inp=inputs[0], outp=outputs[0];
-      if(!outp || !outp.length) return true;
+      if(!outp||!outp.length) return true;
       var y=outp[0];
-      var x=(inp && inp.length) ? inp[0] : null;
+      var x=(inp&&inp.length)?inp[0]:null;
       if(!x){ y.fill(0); return true; }
-
-      var thr=Math.pow(10, p.threshold[0]/20);
-      var bypass=p.bypass[0]>0.5;
-      var n=x.length, i;
+      var thr=Math.pow(10,p.threshold[0]/20), bypass=p.bypass[0]>0.5, n=x.length, i;
 
       if(this.learnLeft>0){
         for(i=0;i<n;i++) this.learnSum+=x[i]*x[i];
         this.learnN+=n; this.learnLeft-=n;
         if(this.learnLeft<=0){
           var r=Math.sqrt(this.learnSum/Math.max(1,this.learnN));
-          this.port.postMessage({type:'noise', db: r>1e-9 ? 20*Math.log10(r) : -90});
+          this.port.postMessage({type:'noise', db:r>1e-9?20*Math.log10(r):-90});
         }
       }
-
       if(this.armFrame>=0 && !this.found){
         var base=currentFrame;
         for(i=0;i<n;i++){
-          if(base+i < this.armFrame) continue;
-          if(Math.abs(x[i]) > this.armThr){
-            this.found=true;
-            this.port.postMessage({type:'onset', frame: base+i});
-            break;
-          }
+          if(base+i<this.armFrame) continue;
+          if(Math.abs(x[i])>this.armThr){ this.found=true; this.port.postMessage({type:'onset',frame:base+i}); break; }
         }
       }
-
       for(i=0;i<n;i++){
         var a=x[i]<0?-x[i]:x[i];
-        this.env = a>this.env ? a : a + (this.env-a)*this.envRel;
+        this.env=a>this.env?a:a+(this.env-a)*this.envRel;
         var t;
         if(this.env>thr){ t=1; this.hold=this.holdN; }
         else if(this.hold>0){ t=1; this.hold--; }
         else t=0;
-        var c = t>this.g ? this.atk : this.rel;
-        this.g = t + (this.g-t)*c;
-        y[i] = bypass ? x[i] : x[i]*this.g;
+        var c=t>this.g?this.atk:this.rel;
+        this.g=t+(this.g-t)*c;
+        y[i]=bypass?x[i]:x[i]*this.g;
       }
-
-      if((++this.tick & 7)===0) this.port.postMessage({type:'gate', open:this.g>0.5});
+      if((++this.tick&7)===0) this.port.postMessage({type:'gate',open:this.g>0.5});
       return true;
     }
   }
   registerProcessor('voice-gate', VoiceGate);
   `;
 
-  var SEGMENTS=34, MIN_DB=-60;
+  var SEGMENTS=34, MIN_DB=-60, MAX_NOTCH=6;
   var ladder=document.getElementById('ladder'), segs=[];
   for(var i=0;i<SEGMENTS;i++){ var d=document.createElement('div'); d.className='seg'; ladder.appendChild(d); segs.push(d); }
 
   var ui={};
   ['main','stop','gain','gainVal','thr','thrVal','learn','voice','gateOn','ns','limiter',
-   'measure','measureRes','rms','peak','peakMark','gateLine','gatePill','statusText',
+   'shift','shiftVal','notchOn','notchReset','notchCount','notchList',
+   'measure','measureRes','rms','gr','peakMark','gateLine','gatePill','statusText',
    'latency','err','feedbackNote'].forEach(function(id){ ui[id]=document.getElementById(id); });
 
-  var ctx=null, stream=null, src=null;
-  var hp1=null, hp2=null, lp=null, pres=null, gateNode=null, gainNode=null, comp=null, analyser=null, micOut=null;
-  var buf=null, raf=0, wakeLock=null, workletURL=null, workletReady=false;
-  var running=false, muted=false, testing=false;
-  var peakHold=0, peakHoldAt=0, clipUntil=0, hotSince=0;
+  var ctx=null,stream=null,src=null;
+  var hp1,hp2,lp,pres,shifter,gateNode,gainNode,comp,analyser,detAnalyser,micOut,notchIn,notchOut;
+  var notches=[], notchUsed=[], buf=null, detBuf=null, raf=0, wakeLock=null;
+  var workletURL=null, workletReady=false;
+  var running=false, muted=false, testing=false, learning=false;
+  var peakHold=0, peakHoldAt=0, clipUntil=0, hotSince=0, lastDetect=0;
+  var candidate={bin:-1,count:0};
 
-  function dbToLin(db){ return Math.pow(10, db/20); }
-  function linToDb(v){ return v>1e-9 ? 20*Math.log10(v) : -Infinity; }
-  function fmt(db){ return (db===-Infinity||db<MIN_DB) ? '−∞' : (db<0?'−':'+')+Math.abs(db).toFixed(1); }
+  function dbToLin(db){ return Math.pow(10,db/20); }
+  function linToDb(v){ return v>1e-9?20*Math.log10(v):-Infinity; }
+  function fmt(db){ return (db===-Infinity||db<MIN_DB)?'−∞':(db<0?'−':'+')+Math.abs(db).toFixed(1); }
   function pct(db){ return ((Math.max(db,MIN_DB)-MIN_DB)/-MIN_DB)*100; }
-  function on(btn){ return btn.getAttribute('aria-pressed')==='true'; }
-
+  function on(b){ return b.getAttribute('aria-pressed')==='true'; }
   function showError(m){ ui.err.textContent=m; ui.err.hidden=false; ui.err.classList.add('warn'); }
-  function clearError(){ ui.err.hidden=true; }
 
   async function getStream(){
     return navigator.mediaDevices.getUserMedia({
-      audio:{
-        echoCancellation:false,
-        noiseSuppression:on(ui.ns),
-        autoGainControl:false,
-        channelCount:1
-      },
+      audio:{echoCancellation:false, noiseSuppression:on(ui.ns), autoGainControl:false, channelCount:1},
       video:false
     });
   }
 
   async function build(){
-    stream = await getStream();
-    ctx = new (window.AudioContext||window.webkitAudioContext)({latencyHint:0});
+    stream=await getStream();
+    ctx=new (window.AudioContext||window.webkitAudioContext)({latencyHint:0});
     if(ctx.state==='suspended') await ctx.resume();
 
     try{
-      if(!workletURL) workletURL = URL.createObjectURL(new Blob([WORKLET],{type:'application/javascript'}));
+      if(!workletURL) workletURL=URL.createObjectURL(new Blob([WORKLET],{type:'application/javascript'}));
       await ctx.audioWorklet.addModule(workletURL);
-      workletReady = true;
+      workletReady=true;
     }catch(e){ workletReady=false; }
 
-    src = ctx.createMediaStreamSource(stream);
+    src=ctx.createMediaStreamSource(stream);
 
-    // Dos pasa-altos en cascada: 24 dB/oct bajo 100 Hz, mata retumbo y manejo
-    hp1=ctx.createBiquadFilter(); hp1.type='highpass'; hp1.frequency.value=100; hp1.Q.value=0.707;
-    hp2=ctx.createBiquadFilter(); hp2.type='highpass'; hp2.frequency.value=100; hp2.Q.value=0.707;
-    // Pasa-bajos: sobre 7.5 kHz casi solo hay siseo y ruido ambiente
-    lp=ctx.createBiquadFilter();  lp.type='lowpass';   lp.frequency.value=7500; lp.Q.value=0.707;
-    // Realce de presencia: la banda donde vive la inteligibilidad de las consonantes
-    pres=ctx.createBiquadFilter(); pres.type='peaking'; pres.frequency.value=2600; pres.Q.value=0.9; pres.gain.value=3.5;
+    // 150 Hz, 24 dB/oct. Tu espectro estaba saturado bajo 200 Hz y la voz
+    // no pierde nada útil ahí: la banda telefónica arranca en 300 Hz.
+    hp1=ctx.createBiquadFilter(); hp1.type='highpass'; hp1.frequency.value=150; hp1.Q.value=0.707;
+    hp2=ctx.createBiquadFilter(); hp2.type='highpass'; hp2.frequency.value=150; hp2.Q.value=0.707;
+    lp =ctx.createBiquadFilter(); lp.type='lowpass';   lp.frequency.value=7500; lp.Q.value=0.707;
+    pres=ctx.createBiquadFilter(); pres.type='peaking'; pres.frequency.value=2600; pres.Q.value=0.9; pres.gain.value=2.5;
+
+    notchIn=ctx.createGain(); notchOut=ctx.createGain();
+    notches=[]; notchUsed=[];
+    for(var k=0;k<MAX_NOTCH;k++){
+      var nf=ctx.createBiquadFilter();
+      nf.type='notch'; nf.frequency.value=1000; nf.Q.value=30;
+      notches.push(nf); notchUsed.push(false);
+    }
+    relinkNotches();
 
     if(workletReady){
-      gateNode = new AudioWorkletNode(ctx,'voice-gate',{numberOfInputs:1,numberOfOutputs:1,outputChannelCount:[1]});
-      gateNode.parameters.get('threshold').value = parseFloat(ui.thr.value);
-      gateNode.port.onmessage = onWorklet;
+      shifter=new AudioWorkletNode(ctx,'freq-shifter',{numberOfInputs:1,numberOfOutputs:1,outputChannelCount:[1]});
+      shifter.parameters.get('shift').value=parseFloat(ui.shift.value);
+      gateNode=new AudioWorkletNode(ctx,'voice-gate',{numberOfInputs:1,numberOfOutputs:1,outputChannelCount:[1]});
+      gateNode.parameters.get('threshold').value=parseFloat(ui.thr.value);
+      gateNode.port.onmessage=onWorklet;
     } else {
-      ui.gateOn.disabled=true; ui.gateOn.setAttribute('aria-pressed','false');
-      ui.learn.disabled=true; ui.measure.disabled=true;
+      shifter=null; gateNode=null;
+      ui.gateOn.disabled=true; ui.notchOn.disabled=true;
+      ui.learn.disabled=true; ui.measure.disabled=true; ui.shift.disabled=true;
     }
 
     gainNode=ctx.createGain(); gainNode.gain.value=dbToLin(parseFloat(ui.gain.value));
 
     comp=ctx.createDynamicsCompressor();
-    comp.threshold.value=-6; comp.knee.value=0; comp.ratio.value=20;
-    comp.attack.value=0.003; comp.release.value=0.12;
+    comp.threshold.value=-10; comp.knee.value=0; comp.ratio.value=20;
+    comp.attack.value=0.002; comp.release.value=0.08;
 
     analyser=ctx.createAnalyser(); analyser.fftSize=1024; analyser.smoothingTimeConstant=0;
     buf=new Float32Array(analyser.fftSize);
+
+    detAnalyser=ctx.createAnalyser(); detAnalyser.fftSize=4096; detAnalyser.smoothingTimeConstant=0.4;
+    detBuf=new Float32Array(detAnalyser.frequencyBinCount);
 
     micOut=ctx.createGain(); micOut.gain.value=1;
 
     wire();
     micOut.connect(ctx.destination);
+    updateLatencyLabel();
+  }
 
-    var s=(ctx.baseLatency||0)+(ctx.outputLatency||0);
-    ui.latency.textContent = s>0 ? 'Latencia del teléfono: '+Math.round(s*1000)+' ms'
-                                 : 'Latencia del teléfono: no reportada';
+  function relinkNotches(){
+    try{ notchIn.disconnect(); }catch(e){}
+    notches.forEach(function(n){ try{ n.disconnect(); }catch(e){} });
+    var active=notches.filter(function(n,i){ return notchUsed[i]; });
+    if(!active.length){ notchIn.connect(notchOut); return; }
+    var prev=notchIn;
+    active.forEach(function(n){ prev.connect(n); prev=n; });
+    prev.connect(notchOut);
   }
 
   function wire(){
-    [src,hp1,hp2,lp,pres,gateNode,gainNode,comp,analyser].forEach(function(n){ if(n) try{n.disconnect();}catch(e){} });
+    [src,hp1,hp2,lp,pres,notchOut,shifter,gateNode,gainNode,comp,analyser].forEach(function(n){
+      if(n) try{ n.disconnect(); }catch(e){}
+    });
+    relinkNotches();
     var chain=[src];
     if(on(ui.voice)) chain.push(hp1,hp2,lp,pres);
-    if(gateNode) chain.push(gateNode);          // siempre en la cadena; se puentea por parámetro
-    chain.push(gainNode);
-    if(on(ui.limiter)) chain.push(comp);
-    chain.push(analyser);
+    chain.push(notchIn);
     for(var i=0;i<chain.length-1;i++) chain[i].connect(chain[i+1]);
+    var post=[notchOut];
+    if(shifter) post.push(shifter);
+    if(gateNode) post.push(gateNode);
+    post.push(gainNode);
+    if(on(ui.limiter)) post.push(comp);
+    post.push(analyser);
+    for(var j=0;j<post.length-1;j++) post[j].connect(post[j+1]);
     analyser.connect(micOut);
-    if(gateNode) gateNode.parameters.get('bypass').value = (on(ui.gateOn) && !testing) ? 0 : 1;
+    notchOut.connect(detAnalyser);
+    if(gateNode) gateNode.parameters.get('bypass').value=(on(ui.gateOn)&&!testing)?0:1;
   }
 
-  /* ---------- mensajes del worklet ---------- */
+  function updateLatencyLabel(){
+    if(!ctx) return;
+    var s=(ctx.baseLatency||0)+(ctx.outputLatency||0);
+    ui.latency.textContent = s>0 ? 'Latencia del teléfono: '+Math.round(s*1000)+' ms' : 'Latencia del teléfono: midiendo…';
+  }
+
+  /* ---------- cazador de acoples ---------- */
+  function hunt(){
+    if(!on(ui.notchOn) || !detAnalyser || testing || learning) return;
+    var now=performance.now();
+    if(now-lastDetect<180) return;
+    lastDetect=now;
+    if(notchUsed.filter(Boolean).length>=MAX_NOTCH) return;
+
+    detAnalyser.getFloatFrequencyData(detBuf);
+    var nyq=ctx.sampleRate/2, bins=detBuf.length;
+    var lo=Math.floor(180/nyq*bins), hi=Math.floor(7000/nyq*bins);
+
+    // mediana aproximada como referencia de fondo
+    var sample=[];
+    for(var i=lo;i<hi;i+=7) sample.push(detBuf[i]);
+    sample.sort(function(a,b){ return a-b; });
+    var med=sample[sample.length>>1];
+
+    var best=-1, bestV=-Infinity;
+    for(var b=lo;b<hi;b++){
+      var v=detBuf[b];
+      if(v<-55) continue;
+      if(v-med<18) continue;                                  // pico estrecho y muy destacado
+      if(v<detBuf[b-1]||v<detBuf[b+1]) continue;
+      if(v>bestV){ bestV=v; best=b; }
+    }
+    if(best<0){ candidate.count=0; candidate.bin=-1; return; }
+
+    if(Math.abs(best-candidate.bin)<=2){ candidate.count++; candidate.bin=best; }
+    else { candidate.bin=best; candidate.count=1; }
+
+    if(candidate.count>=4){                                   // ~0.7 s sostenido = acople, no voz
+      var f=best*nyq/bins;
+      for(var k=0;k<MAX_NOTCH;k++){
+        if(notchUsed[k]) continue;
+        notches[k].frequency.value=f;
+        notches[k].Q.value=30;
+        notchUsed[k]=true;
+        break;
+      }
+      candidate.count=0; candidate.bin=-1;
+      wire(); renderNotches();
+    }
+  }
+
+  function renderNotches(){
+    var list=[];
+    for(var k=0;k<MAX_NOTCH;k++) if(notchUsed[k]) list.push(Math.round(notches[k].frequency.value)+' Hz');
+    ui.notchCount.textContent=list.length;
+    ui.notchList.textContent=list.length?list.join('  ·  '):'sin frecuencias atrapadas';
+  }
+
+  /* ---------- worklet ---------- */
   var onsetResolve=null;
   function onWorklet(e){
     var d=e.data;
-    if(d.type==='gate'){ ui.gatePill.classList.toggle('open', !!d.open); }
+    if(d.type==='gate') ui.gatePill.classList.toggle('open',!!d.open);
     else if(d.type==='noise'){
-      var t=Math.max(-75, Math.min(-15, d.db+9));
+      var t=Math.max(-80,Math.min(-20,d.db+9));
       ui.thr.value=t.toFixed(1);
       ui.thr.dispatchEvent(new Event('input'));
       ui.learn.textContent='Ruido de fondo: '+fmt(d.db)+' dBFS';
+      learning=false;
+      if(micOut) micOut.gain.setValueAtTime(muted?0:1,ctx.currentTime);
       ui.learn.disabled=false;
       setTimeout(function(){ ui.learn.textContent='Calibrar con el ruido del sitio'; },4000);
     }
-    else if(d.type==='onset' && onsetResolve){ onsetResolve(d.frame); onsetResolve=null; }
+    else if(d.type==='onset'&&onsetResolve){ onsetResolve(d.frame); onsetResolve=null; }
   }
 
-  /* ---------- medidor ---------- */
   function loop(){
     raf=requestAnimationFrame(loop);
     if(!analyser) return;
     analyser.getFloatTimeDomainData(buf);
-    var sum=0, pk=0;
+    var sum=0,pk=0;
     for(var i=0;i<buf.length;i++){ var s=buf[i]; sum+=s*s; var a=s<0?-s:s; if(a>pk)pk=a; }
-    var rmsDb=linToDb(Math.sqrt(sum/buf.length)), pkDb=linToDb(pk), now=performance.now();
+    var rmsDb=linToDb(Math.sqrt(sum/buf.length)), now=performance.now();
 
     if(pk>=peakHold){ peakHold=pk; peakHoldAt=now; }
     else if(now-peakHoldAt>1200) peakHold*=0.93;
-
     if(pk>=0.995) clipUntil=now+800;
-    document.body.classList.toggle('clipping', now<clipUntil);
+    document.body.classList.toggle('clipping',now<clipUntil);
 
-    if(!muted && !testing && rmsDb>-8){ if(!hotSince) hotSince=now; } else hotSince=0;
-    ui.feedbackNote.hidden = !(hotSince && now-hotSince>2000);
+    if(!muted&&!testing&&rmsDb>-8){ if(!hotSince) hotSince=now; } else hotSince=0;
+    ui.feedbackNote.hidden=!(hotSince&&now-hotSince>2000);
 
     var lit=Math.round((Math.max(rmsDb,MIN_DB)-MIN_DB)/-MIN_DB*SEGMENTS);
     for(var j=0;j<SEGMENTS;j++){
       var f=j/(SEGMENTS-1);
-      segs[j].style.background = j<lit ? (f>0.88?'var(--clip)':f>0.72?'var(--hot)':'var(--signal)') : '#2b3134';
+      segs[j].style.background=j<lit?(f>0.88?'var(--clip)':f>0.72?'var(--hot)':'var(--signal)'):'#2b3134';
     }
     var ph=linToDb(peakHold);
-    ui.peakMark.style.opacity = ph>MIN_DB?'1':'0';
+    ui.peakMark.style.opacity=ph>MIN_DB?'1':'0';
     if(ph>MIN_DB) ui.peakMark.style.left=pct(ph)+'%';
 
     ui.rms.innerHTML=fmt(rmsDb)+'<span>dBFS</span>';
-    ui.peak.textContent=fmt(pkDb);
+    if(comp){
+      var red=Math.abs(comp.reduction||0);
+      ui.gr.textContent='−'+red.toFixed(0);
+      ui.gr.parentElement.className=red>6?'pill red':'';
+    }
+    hunt();
+    return;
   }
 
-  /* ---------- medición de latencia de ida y vuelta ---------- */
   async function measure(){
-    if(!running || !gateNode || testing) return;
-    testing=true;
-    ui.measure.disabled=true;
+    if(!running||!gateNode||testing) return;
+    testing=true; ui.measure.disabled=true;
     ui.measureRes.innerHTML='···<small>emitiendo pulso</small>';
     var prevBypass=gateNode.parameters.get('bypass').value;
     gateNode.parameters.get('bypass').value=1;
-    var prevOut=micOut.gain.value;
-    micOut.gain.setValueAtTime(0, ctx.currentTime);   // corta el monitoreo para evitar acople
-
+    micOut.gain.setValueAtTime(0,ctx.currentTime);
     await new Promise(function(r){ setTimeout(r,250); });
 
-    var t0=ctx.currentTime+0.25;
-    var armFrame=Math.round(t0*ctx.sampleRate);
-
+    var t0=ctx.currentTime+0.25, armFrame=Math.round(t0*ctx.sampleRate);
     var osc=ctx.createOscillator(); osc.type='sine'; osc.frequency.value=1000;
     var env=ctx.createGain(); env.gain.value=0;
     osc.connect(env); env.connect(ctx.destination);
@@ -422,77 +535,74 @@ body.muted .primary{background:var(--signal);color:#0e1416}
     env.gain.setValueAtTime(1,t0+0.030);
     env.gain.linearRampToValueAtTime(0,t0+0.035);
     osc.start(t0); osc.stop(t0+0.08);
+    gateNode.port.postMessage({type:'arm',frame:armFrame,thr:0.05});
 
-    gateNode.port.postMessage({type:'arm', frame:armFrame, thr:0.05});
-
-    var frame = await new Promise(function(resolve){
-      onsetResolve=resolve;
-      setTimeout(function(){ if(onsetResolve){ onsetResolve=null; resolve(null); } },4000);
+    var frame=await new Promise(function(res){
+      onsetResolve=res;
+      setTimeout(function(){ if(onsetResolve){ onsetResolve=null; res(null); } },4000);
     });
     gateNode.port.postMessage({type:'disarm'});
 
-    if(frame===null){
-      ui.measureRes.innerHTML='—<small>no se detectó, sube el volumen</small>';
-    } else {
+    if(frame===null) ui.measureRes.innerHTML='—<small>no se detectó, sube el volumen</small>';
+    else{
       var ms=(frame-armFrame)/ctx.sampleRate*1000;
       var phone=Math.round(((ctx.baseLatency||0)+(ctx.outputLatency||0))*1000);
-      ui.measureRes.innerHTML=Math.round(ms)+' ms<small>total · teléfono ≈ '+phone+' ms</small>';
+      ui.measureRes.innerHTML=Math.round(ms)+' ms<small>total · teléfono ≈ '+phone+' ms · enlace ≈ '+Math.max(0,Math.round(ms-phone))+' ms</small>';
+      updateLatencyLabel();
     }
-
-    micOut.gain.setValueAtTime(muted?0:prevOut, ctx.currentTime);
+    micOut.gain.setValueAtTime(muted?0:1,ctx.currentTime);
     gateNode.parameters.get('bypass').value=prevBypass;
-    testing=false;
-    ui.measure.disabled=false;
-    wire();
+    testing=false; ui.measure.disabled=false; wire();
   }
 
   async function keepAwake(){
     try{ if('wakeLock' in navigator && !wakeLock) wakeLock=await navigator.wakeLock.request('screen'); }catch(e){}
   }
   document.addEventListener('visibilitychange',function(){
-    if(document.visibilityState==='visible' && running) keepAwake(); else wakeLock=null;
+    if(document.visibilityState==='visible'&&running) keepAwake(); else wakeLock=null;
   });
 
   function setState(){
-    document.body.classList.toggle('live', running && !muted);
-    document.body.classList.toggle('muted', running && muted);
+    document.body.classList.toggle('live',running&&!muted);
+    document.body.classList.toggle('muted',running&&muted);
     ui.stop.hidden=!running;
-    ui.learn.disabled = !(running && workletReady);
-    ui.measure.disabled = !(running && workletReady) || testing;
+    ui.learn.disabled=!(running&&workletReady);
+    ui.measure.disabled=!(running&&workletReady)||testing;
     if(!running){ ui.main.textContent='Activar micrófono'; ui.statusText.textContent='Micrófono detenido'; }
     else if(muted){ ui.main.textContent='Reanudar'; ui.statusText.textContent='Silenciado'; }
     else { ui.main.textContent='Silenciar'; ui.statusText.textContent='Transmitiendo a la salida de audio'; }
   }
 
-  ui.main.addEventListener('click', async function(){
-    clearError();
+  ui.main.addEventListener('click',async function(){
+    ui.err.hidden=true;
     if(!running){
       try{
         await build();
         running=true; muted=false;
         micOut.gain.setTargetAtTime(1,ctx.currentTime,0.01);
-        keepAwake();
-        cancelAnimationFrame(raf); loop();
+        keepAwake(); cancelAnimationFrame(raf); loop();
+        setTimeout(updateLatencyLabel,1500);
       }catch(e){
-        showError(e && e.name==='NotAllowedError'
-          ? 'Permiso de micrófono denegado. Habilítalo para este sitio y vuelve a intentar.'
-          : 'No se pudo abrir el micrófono: '+(e && e.message ? e.message : e));
+        showError(e&&e.name==='NotAllowedError'
+          ?'Permiso de micrófono denegado. Habilítalo para este sitio y vuelve a intentar.'
+          :'No se pudo abrir el micrófono: '+(e&&e.message?e.message:e));
         return;
       }
     } else {
       muted=!muted;
-      micOut.gain.setTargetAtTime(muted?0:1, ctx.currentTime, 0.015);
+      micOut.gain.setTargetAtTime(muted?0:1,ctx.currentTime,0.015);
     }
     setState();
   });
 
-  ui.stop.addEventListener('click', function(){
+  ui.stop.addEventListener('click',function(){
     cancelAnimationFrame(raf);
     if(stream) stream.getTracks().forEach(function(t){ t.stop(); });
     if(ctx) ctx.close();
-    ctx=stream=src=analyser=gateNode=null;
-    running=false; muted=false; testing=false; peakHold=0; hotSince=0; wakeLock=null;
-    ui.rms.innerHTML='−∞<span>dBFS</span>'; ui.peak.textContent='−∞';
+    ctx=stream=src=analyser=gateNode=shifter=comp=null;
+    running=false; muted=false; testing=false; learning=false; peakHold=0; hotSince=0; wakeLock=null;
+    notchUsed=notchUsed.map(function(){ return false; }); renderNotches();
+    ui.rms.innerHTML='−∞<span>dBFS</span>'; ui.gr.textContent='0';
     ui.peakMark.style.opacity='0'; ui.feedbackNote.hidden=true;
     ui.gatePill.classList.remove('open');
     segs.forEach(function(s){ s.style.background='#2b3134'; });
@@ -500,56 +610,72 @@ body.muted .primary{background:var(--signal);color:#0e1416}
     setState();
   });
 
-  ui.gain.addEventListener('input', function(){
+  ui.gain.addEventListener('input',function(){
     var db=parseFloat(ui.gain.value);
     ui.gainVal.textContent=(db>0?'+':db<0?'−':'')+Math.abs(db).toFixed(1)+' dB';
-    if(gainNode) gainNode.gain.setTargetAtTime(dbToLin(db), ctx.currentTime, 0.02);
+    if(gainNode) gainNode.gain.setTargetAtTime(dbToLin(db),ctx.currentTime,0.02);
   });
 
-  ui.thr.addEventListener('input', function(){
+  ui.shift.addEventListener('input',function(){
+    var hz=parseFloat(ui.shift.value);
+    ui.shiftVal.textContent=hz.toFixed(1)+' Hz';
+    if(shifter) shifter.parameters.get('shift').value=hz;
+  });
+
+  ui.thr.addEventListener('input',function(){
     var db=parseFloat(ui.thr.value);
     ui.thrVal.textContent=fmt(db)+' dB';
     ui.gateLine.style.left=pct(db)+'%';
     if(gateNode) gateNode.parameters.get('threshold').value=db;
   });
 
-  ui.learn.addEventListener('click', function(){
+  // Calibra en silencio: corta la salida para no medir su propia realimentación
+  ui.learn.addEventListener('click',function(){
     if(!gateNode) return;
+    learning=true;
+    micOut.gain.setValueAtTime(0,ctx.currentTime);
     ui.learn.textContent='Escuchando el ambiente… guarda silencio';
     ui.learn.disabled=true;
-    gateNode.port.postMessage({type:'learn', sec:1.8});
+    gateNode.port.postMessage({type:'learn',sec:1.8});
   });
 
-  ui.measure.addEventListener('click', measure);
+  ui.notchReset.addEventListener('click',function(){
+    notchUsed=notchUsed.map(function(){ return false; });
+    candidate={bin:-1,count:0};
+    if(running) wire();
+    renderNotches();
+  });
 
-  [ui.voice, ui.gateOn, ui.limiter].forEach(function(b){
-    b.addEventListener('click', function(){
-      b.setAttribute('aria-pressed', on(b)?'false':'true');
+  ui.measure.addEventListener('click',measure);
+
+  [ui.voice,ui.gateOn,ui.limiter,ui.notchOn].forEach(function(b){
+    b.addEventListener('click',function(){
+      b.setAttribute('aria-pressed',on(b)?'false':'true');
       if(running) wire();
     });
   });
 
-  // El supresor del sistema exige volver a pedir el stream con otras restricciones
-  ui.ns.addEventListener('click', async function(){
-    ui.ns.setAttribute('aria-pressed', on(ui.ns)?'false':'true');
+  ui.ns.addEventListener('click',async function(){
+    ui.ns.setAttribute('aria-pressed',on(ui.ns)?'false':'true');
     if(!running) return;
     ui.ns.disabled=true;
     try{
       stream.getTracks().forEach(function(t){ t.stop(); });
-      stream = await getStream();
+      stream=await getStream();
       try{ src.disconnect(); }catch(e){}
-      src = ctx.createMediaStreamSource(stream);
+      src=ctx.createMediaStreamSource(stream);
       wire();
     }catch(e){ showError('No se pudo reabrir el micrófono: '+(e.message||e)); }
     ui.ns.disabled=false;
   });
 
-  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
     showError('Este navegador no expone el micrófono. Ábrelo en Chrome sobre https:// o localhost.');
     ui.main.disabled=true;
   }
 
   ui.gateLine.style.left=pct(parseFloat(ui.thr.value))+'%';
+  renderNotches();
   setState();
 })();
 </script>
